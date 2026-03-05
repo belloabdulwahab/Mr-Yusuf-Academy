@@ -13,9 +13,9 @@
          <div class="ms-auto d-flex align-items-center gap-3">
 
             <!-- Notification Icon --> 
-             <div class="positive-relative">
+             <div class="position-relative">
                 <i class="bi bi-bell fs-5"></i>
-                <span class="positive-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     0
                 </span>
              </div>
@@ -31,7 +31,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow">
                     <li><a class="dropdown-item" href="#">Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="/logout.php">Logout</a></li>
+                    <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
                 </ul>
               </div>
 
