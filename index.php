@@ -1,26 +1,22 @@
-<?php
-include "db.php";
-
-$result = mysqli_query($conn, "SELECT * FROM users");
-?>
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>users</title>
-    </head>
-    <body>
-        
-    <h1>Registered Users</h1>
-
-    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-    <p>
-        Name: <?php echo $row['name']; ?> <br>
-        Email: <?php echo $row['email']; ?> <br>
-        Role: <?php echo $row['role']; ?>
-    </p>
-    <hr>
-<?php } ?>
-
-    </body>
-</html>
+TEACHER_SITE 
+    /assets 
+        /css/style.css 
+        /js/app.js 
+    /includes 
+        footer.php 
+        header.php 
+        navbar.php 
+        sidebar.php 
+    .gitignore 
+    add_class.php 
+    add_subject.php 
+    dashboard.php 
+    db.php 
+    delete_class.php 
+    delete_subject.php 
+    edit_class.php 
+    edit_subject.php 
+    enrollment.php 
+    flash.php 
+    login.php 
+    logout.php 

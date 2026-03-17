@@ -88,55 +88,113 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
+include "includes/header.php";
+include "includes/navbar.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enroll in Subjects</title>
-</head>
-<body>
+<div class="container-fluid">
 
-<h2>Enroll in Subjects</h2>
+    <div class="row"> 
+    <?php include "includes/sidebar.php"; ?>
 
-<?php display_flash(); ?>
+    <div class="col-lg-10 ms-auto dashboard-main p-4">
 
-<?php if (mysqli_num_rows($result) > 0) { ?>
+        <!-- PAGE HEADER --> 
+         <div class="mb-4">
+            <h3 class="fw-bold">Enroll in Subjects</h3>
+            <p class="text-muted mb-0">Choose a subject and start learning.</p>
+         </div>
 
-<form method="POST">
-    <label>Select Subject:</label><br><br>
+        <?php display_flash(); ?>
 
-    <select name="subject_id" required>
-        <option value="">-- Select Subject --</option>
+        <?php if (mysqli_num_rows($result) > 0) { ?>
 
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-            <option value="<?php echo (int)$row['id']; ?>">
-                <?php echo htmlspecialchars($row['subject_name']); ?>
-                - N<?php echo htmlspecialchars($row['price']); ?>
-            </option>
+            <div class="row"> 
+
+                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+
+                    <div class="col-md-4 mb-4">
+
+                        <div class="card subject-card shadow-sm border-0 h-100">
+
+                            <div class="card-body d-flex flex-column">
+
+                                <h5 class="card-title">
+                                    <?php echo htmlspecialchars($row['subject_name']); ?>
+                                </h5>
+
+                                <p class="text-muted">
+                                    Live classes and guided learning.
+                                </p>
+
+                                <h6 class="mb-4">
+                                    <i class="bi bi-cash-stack"></i>
+                                    &#8358;<?php echo number_format($row['price']); ?>
+                                </h6>
+
+                                <form method="POST">
+
+                                    <input type="hidden"
+                                        name="subject_id"
+                                        value="<?php echo (int)$row['id']; ?>">
+
+                                    <input type="hidden"
+                                        name="csrf_token"
+                                        value="<?php echo $csrf_token; ?>">
+
+                                    <button type="submit"
+                                        class="btn btn-primary mt-auto">
+
+                                        <i class="bi bi-plus-circle"></i>
+                                        Enroll 
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                <?php } ?>
+
+            </div>
+        
+        <?php } else { ?>
+            
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center p-5">
+
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+
+                    <h5 class="mt-3">All Subjects Enrolled</h5>
+
+                    <p class="text-muted">
+                        You are already enrolled in all available subjects.
+                    </p>
+
+                    <a href="dashboard.php" class="btn btn-primary">
+                        Back to Dashboard 
+                    </a>
+
+                </div>
+
+            </div>
+
         <?php } ?>
 
-    </select>
-    <br><br>
+    </div>
+    
+    </div>
 
-    <input type="hidden" name="csrf_token"
-            value="<?php echo $csrf_token; ?>">
+</div>
 
-    <button type="submit" name="enroll">Enroll</button>
-</form>
-
-<?php } else { ?> 
-
-<p>You are enrolled in all available subjects.</p>
-
-<?php } ?>
 <?php mysqli_stmt_close($stmt); ?>
 
-<br>
-<a href="dashboard.php">Back to dashboard</a>
-    
-</body>
-</html>
+<?php include "includes/footer.php" ?>
+
+
+
 

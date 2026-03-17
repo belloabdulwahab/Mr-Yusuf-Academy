@@ -23,9 +23,21 @@ include "includes/navbar.php";
         <?php include "includes/sidebar.php"; ?>
 
         <!-- MAIN CONTENT AREA --> 
-         <div class="col-md-9 col-lg-10 p-4">
+         <div class="col-lg-10 ms-auto dashboard-main p-4">
 
-            <h3 class="mb-4">Welcome, <?php echo $name; ?></h3>
+            <div class="dashboard-header">
+
+                <div>
+                    <h3 class="fw-bold mb-1">
+                        <?php echo ($role === "student") ? "Student Dashboard" : "Admin Dashboard"; ?>
+                    </h3>
+                    
+                    <p class="text-muted mb-0">
+                        Welcome back, <?php echo $name; ?>
+                    </p>
+                </div>
+
+            </div>
 
             <?php display_flash(); ?>
 
@@ -34,10 +46,11 @@ include "includes/navbar.php";
             /* ADMIN DASHBOARD */
             if ($role === 'admin') { ?> 
             
-            <!-- DASHBOARD ANALYTICS CARDS --> 
-             <div class="row mb-4">
+            <!-- ======== ADMIN ANALYTICS ========= --> 
+             <div class="row g-4 mb-4">
 
                 <?php
+
                 /* Total Students */
                 $query_students = "SELECT COUNT(*) AS total_students
                                     FROM users WHERE role='student'";
@@ -46,15 +59,24 @@ include "includes/navbar.php";
                 ?>
 
                 <div class="col-md-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted">Total Students</h6>
-                            <h3><?php echo $total_students; ?></h3>
+                    <div class="card dashboard-card shadow-sm stat-card"> 
+                        <div class="card-body d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <h6 class="stat-label">Total Students</h6>
+                                <h3 class="stat-number"><?php echo $total_students; ?></h3>
+                            </div>
+
+                            <div class="stat-icon bg-primary-soft">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <?php
+
                 /* Total Subjects */
                 $query_subjects = "SELECT COUNT(*) AS total_subjects
                                     FROM subjects";
@@ -63,15 +85,24 @@ include "includes/navbar.php";
                 ?>
 
                 <div class="col-md-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted">Total Subjects</h6>
-                            <h3><?php echo $total_subjects; ?></h3>
+                    <div class="card dashboard-card shadow-sm stat-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            
+                            <div> 
+                                <h6 class="stat-label">Total Subjects</h6>
+                                <h3 class="stat-number"><?php echo $total_subjects; ?></h3>
+                            </div>
+
+                            <div class="stat-icon bg-success-soft"> 
+                                <i class="bi bi-book-fill"></i>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <?php 
+
                 /* Total Classes */
                 $query_classes = "SELECT COUNT(*) AS total_classes 
                                     FROM classes";
@@ -80,15 +111,24 @@ include "includes/navbar.php";
                 ?>
 
                 <div class="col-md-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted">Total Classes</h6>
-                            <h3><?php echo $total_classes; ?></h3>
+                    <div class="card dashboard-card shadow-sm stat-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+
+                            <div> 
+                                <h6 class="stat-label">Total Classes</h6>
+                                <h3 class="stat-number"><?php echo $total_classes; ?></h3>
+                            </div>
+
+                            <div class="stat-icon bg-warning-soft"> 
+                                <i class="bi bi-calendar-event-fill"></i>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <?php
+
                 /* Upcoming Classes */
                 $query_upcoming = "SELECT COUNT(*) AS upcoming_classes
                                     FROM classes WHERE status='upcoming'";
@@ -97,30 +137,43 @@ include "includes/navbar.php";
                 ?>
 
                 <div class="col-md-3">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted">Upcoming Classes</h6>
-                            <h3><?php echo $total_upcoming; ?></h3>
+                    <div class="card dashboard-card shadow-sm stat-card">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <h6 class="stat-label">Upcoming Classes</h6>
+                                <h3 class="stat-number"><?php echo $total_upcoming; ?></h3>
+                            </div>
+
+                            <div class="stat-icon bg-danger-soft"> 
+                                <i class="bi bi-clock-fill"></i>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
              </div>
 
-
+                <!-- ADMIN CONTROLS --> 
              <h4 class="mb-3">Admin Controls</h4>
+            <div class="mb-4 d-flex gap-2">
 
-             <a href="add_subject.php" class="btn btn-primary btn-sm mb-3">
+             <a href="add_subject.php" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
                 Add Subject
              </a>
 
-             <a href="add_class.php" class="btn btn-success btn-sm mb-3">
+             <a href="add_class.php" class="btn btn-success">
+                <i class="bi bi-plus-square me-1"></i>
                 Add Class
              </a>
 
+            </div>
+
 
              <!-- SUBJECT LISTING --> 
-              <h4 class="mt-4">All Subjects</h4>
+              <h4 id="subjects" class="mt-4 mb-3">All Subjects</h4>
 
               <?php
 
@@ -149,32 +202,53 @@ include "includes/navbar.php";
                         $subject_id = (int) $row['id'];
                 ?>
 
-                <div class="card mb-3 shadow-sm">
-                <div class="card-body">
+                <div class="card subject-card mb-3 shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
 
-                    <strong>Subject:</strong>
-                    <?php echo htmlspecialchars($row['subject_name']); ?><br>
+                    <div class="d-flex align-items-center gap-3">
 
-                    <strong>Price:</strong>
-                    N<?php echo htmlspecialchars($row['price']); ?><br><br>
+                        <div class="subject-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
 
-                    <a href="edit_subject.php?id=<?php echo $subject_id; ?>" class="btn btn-sm btn-warning">
-                        Edit
-                    </a>
+                        <div> 
 
-                    <form method="POST" 
-                            action="delete_subject.php"
-                            onsubmit="return confirm('Are you sure you want to delete this subject?');"
-                            style="display: inline;">
+                            <strong class="fs-5">
+                                <?php echo htmlspecialchars($row['subject_name']); ?>
+                            </strong>
 
-                        <input type="hidden" name="id" value="<?php echo $subject_id; ?>">
-                        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                            <div class="text-muted small mt-1">
+                                Price: &#8358;<?php echo number_format($row['price']); ?>
+                            </div>
 
-                        <button class="btn btn-sm btn-danger">
-                            Delete
-                        </button>
+                        </div>
 
-                    </form>
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a href="edit_subject.php?id=<?php echo $subject_id; ?>" 
+                            class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-pencil"></i>
+                            Edit
+                        </a>
+
+                        <form method="POST" 
+                                action="delete_subject.php"
+                                onsubmit="return confirm('Are you sure you want to delete this subject?');"
+                                style="display: inline;">
+
+                            <input type="hidden" name="id" value="<?php echo $subject_id; ?>">
+                            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+
+                            <button class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
                 </div>
@@ -182,7 +256,7 @@ include "includes/navbar.php";
                 <?php
                         }
                     } else {
-                        echo "<p>No subjects added yet.</p>";
+                        echo "<p class='text-muted'>No subjects added yet.</p>";
                     }
                     
                     mysqli_stmt_close($stmt_subjects_admin);
@@ -190,7 +264,7 @@ include "includes/navbar.php";
                 ?>
 
                 <!-- CLASS LISTING -->
-                 <h4 class="mt-4">Scheduled Classes</h4>
+                 <h4 id="classes" class="mt-4">Scheduled Classes</h4>
 
                     <?php
 
@@ -220,20 +294,23 @@ include "includes/navbar.php";
                                 /* Cast ID strictly */
                                 $class_id = (int)$row['id'];
 
-                                /* Determine status color */
-                                $status = $row['status'];
+                                $status = $row['status']; ?>
 
-                                if ($status === "Upcoming") {
-                                    $status_color = "orange";
-                                } elseif ($status === "Completed") {
-                                    $status_color = "green";
-                                } else {
-                                    $status_color = "gray"; // fallback safety
-                                } 
-                    ?>
-
-                    <div class="card mb-3 shadow-sm">
+                    <div class="card class-card mb-3 shadow-sm">
                         <div class="card-body">
+
+                            <div class="mb-2">
+
+                                <!-- Determine status color -->
+                                <?php if ($status === "Upcoming") { ?>
+                                    <span class="badge bg-warning text-dark">Upcoming</span>
+                                <?php } elseif ($status === "Completed") { ?>
+                                    <span class="badge bg-success">Completed</span>
+                                <?php } else { // fallback safety ?>
+                                    <span class="badge bg-secondary">Unknown</span>
+                                <?php } ?>
+
+                            </div>
 
                             <strong>Subject:</strong>
                             <?php echo htmlspecialchars($row['subject_name']); ?><br>
@@ -248,14 +325,7 @@ include "includes/navbar.php";
                                 target="_blank"
                                 rel="noopener noreferrer">
                                 Join Class
-                            </a><br>
-
-                            <strong>Status:</strong>
-                            <span style="color: <?php echo $status_color; ?>; font-weight:bold;">
-                            <?php echo htmlspecialchars($status); ?>
-                            </span>
-                            
-                            <br><br>
+                            </a><br><br>
 
                             <a href="edit_class.php?id=<?php echo $class_id; ?>"
                             class="btn btn-sm btn-warning">
@@ -284,7 +354,7 @@ include "includes/navbar.php";
                         <?php
                             }
                         } else {
-                            echo "<p>No classes scheduled yet.</p>";
+                            echo "<p class='text-muted'>No classes scheduled yet.</p>";
                         }
 
                         mysqli_stmt_close($stmt_admin);
@@ -296,14 +366,20 @@ include "includes/navbar.php";
             } /* STUDENT DASHBOARD */
             
              else { ?>
+                <div class="container border-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <h4 class="mb-3">Student Dashboard</h4>
+                    <div>
+                        <h5 class="fw-semibold mb-0">Learning Overview</h5>
+                        <p class="text-muted mb-0">View your enrolled subjects and upcoming classes.</p>
+                    </div> 
 
-                <a href="enrollment.php" class="btn btn-primary mb-3">
-                    Enroll in Subjects
-                </a>
+                    <a href="enrollment.php" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Enroll in Subjects
+                    </a>
 
-                <p>View your enrolled subjects and upcoming classes.</p>
+                </div>
 
                 <?php
 
@@ -321,38 +397,68 @@ include "includes/navbar.php";
                 $subjects_result = mysqli_stmt_get_result($stmt_subjects);
                 ?>
 
-                <h5>Your Enrolled Subjects</h5>
+                <h5 id="subjects" class="mb-3">Your Enrolled Subjects</h5>
+
+                <div class="row g-3 mb-4">
                 
-                <?php if (mysqli_num_rows($subjects_result) > 0) { ?> 
-
-                    <ul class="list-group mb-4">
+                <?php if (mysqli_num_rows($subjects_result) > 0) { 
                         
-                        <?php while ($row = mysqli_fetch_assoc($subjects_result)) { ?> 
+                         while ($row = mysqli_fetch_assoc($subjects_result)) { ?> 
 
-                            <li class="list-group-item">
+                            <div class="col-md-4"> 
 
-                                <a href="subject.php?id=<?php echo (int)$row['id']; ?>">
-                                <?php echo htmlspecialchars($row['subject_name']); ?>
-                                </a>
+                                <div class="card student-subject-card shadow-sm">
 
-                                <span class="float-end">
-                                    N<?php echo htmlspecialchars($row['price']); ?>
-                                </span>
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        
+                                        <div class="d-flex align-items-center gap-3">
 
-                            </li>
+                                            <div class="student-subject-icon">
+                                                <i class="bi bi-journal-bookmark"></i>
+                                            </div>
 
-                        <?php } ?>
+                                            <div> 
 
-                    </ul>
+                                                <h6 class="mb-1 fw-semibold">
+                                                    <?php echo htmlspecialchars($row['subject_name']); ?>
+                                                </h6>
 
-                <?php } else { ?>
+                                                <small class="text-muted">
+                                                    Learning Subject
+                                                </small>
 
-                    <p>You have not enrolled for any subjects yet.</p>
+                                            </div>
 
-                <?php }
+                                        </div>
+
+                                        <div>
+                                            <a href="subject.php?id=<?php echo (int)$row['id']; ?>"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-box-arrow-up-right"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        <?php } 
+
+                     } else { 
+
+                    echo "<p class='text-muted'>You have not enrolled for any subjects yet.</p>";
+
+                 }
 
                 mysqli_stmt_close($stmt_subjects);
 
+                ?>
+
+                </div>
+
+                <?php
 
                 /* Fetch classes for Enrolled subjects */
                 $stmt_classes = mysqli_prepare(
@@ -372,13 +478,66 @@ include "includes/navbar.php";
 
                 ?>
 
-                <h5>Your Upcoming Classes</h5>
+                <?php 
+                /* NEXT CLASS WIDGET */
+                $stmt_next = mysqli_prepare(
+                    $conn, 
+                    "SELECT c.class_date, c.class_time, c.meet_link, s.subject_name
+                    FROM classes c
+                    JOIN subjects s ON c.subject_id = s.id
+                    JOIN student_subjects ss ON ss.subject_id = c.subject_id
+                    WHERE ss.user_id = ?
+                    AND c.status = 'Upcoming' 
+                    ORDER BY c.class_date ASC, c.class_time ASC
+                    LIMIT 1"
+                );
+
+                mysqli_stmt_bind_param($stmt_next, "i", $user_id);
+                mysqli_stmt_execute($stmt_next);
+                $next_class = mysqli_stmt_get_result($stmt_next);
+
+                if (mysqli_num_rows($next_class) > 0) {
+                    $row = mysqli_fetch_assoc($next_class);
+                ?>
+
+                <div class="card next-class-card shadow-sm mb-4 border-0">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">Next Class</small>
+                            <h5 class="mb-1">
+                                <?php echo htmlspecialchars($row['subject_name']); ?>
+                            </h5>
+
+                            <span class="text-muted">
+                                <?php echo htmlspecialchars($row['class_date']); ?>
+                                • 
+                                <?php echo htmlspecialchars($row['class_time']); ?>
+                            </span>
+                        </div>
+
+                        <div>
+                            <a href="<?php echo htmlspecialchars($row['meet_link']); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-success">
+
+                                <i class="bi bi-camera-video"></i>
+                                Join Class
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php } 
+                mysqli_stmt_close($stmt_next);
+                ?>
+
+                <h5 id="classes" class="mb-3">Your Upcoming Classes</h5>
 
                 <?php if (mysqli_num_rows($classes_result) > 0) { 
 
                     while ($row = mysqli_fetch_assoc($classes_result)) { ?>
 
-                        <div class="card mb-3 shadow-sm">
+                        <div class="card class-card mb-3 shadow-sm border-0">
                             <div class="card-body">
 
                                 <strong>Subject:</strong>
@@ -392,7 +551,9 @@ include "includes/navbar.php";
 
                                 <a href="<?php echo htmlspecialchars($row['meet_link']); ?>"
                                     target="_blank"
-                                    rel="noopener noreferrer">
+                                    rel="noopener noreferrer"
+                                    class="btn btn-sm btn-success">
+                                    <i class="bi bi-camera-video"></i>
                                     Join Class
                                 </a>
 
@@ -402,7 +563,7 @@ include "includes/navbar.php";
                     <?php }
 
                 } else {
-                    echo "<p>No classes available.</p>";
+                    echo "<p class='text-muted'>No classes available yet.</p>";
                 }
 
                 mysqli_stmt_close($stmt_classes);
@@ -410,9 +571,10 @@ include "includes/navbar.php";
              }
 
              ?>
-                    
+                </div>      
          </div>
     </div>
 </div>
+
 
 <?php include "includes/footer.php"; ?>

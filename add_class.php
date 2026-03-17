@@ -112,68 +112,131 @@ mysqli_stmt_execute($stmt);
 $subjects = mysqli_stmt_get_result($stmt);
 mysqli_stmt_close($stmt);
 
+include "includes/header.php"; 
+include "includes/navbar.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Class</title>
-</head>
-<body>
+<div class="container-fluid">
+
+    <div class="row"> 
     
-    <h2>Add New Classes</h2>
+    <?php include "includes/sidebar.php"; ?>
+
+    <div class="col-lg-10 ms-auto dashboard-main p-4"> 
+
+        <!-- PAGE HEADER --> 
+         <div class="mb-4">
+            <h3 class="fw-bold">Schedule Class</h3>
+            <p class="text-muted">Create a new class section for students.</p>
+         </div>
 
     <!-- Displays Flash message -->
     <?php display_flash(); ?> 
 
-    <form method="POST">
+    <div class="card shadow-sm border-0"> 
 
-        <label>Select Subject:</label><br>
-        <select name="subject_id" required>
-            <option value="">-- Select Subject --</option>
-            <?php while ($row = mysqli_fetch_assoc($subjects)) { ?>
-                <option value="<?php echo htmlspecialchars($row['id']); ?>"> 
-                    <?php echo htmlspecialchars($row['subject_name']); ?>
-                </option>
-            <?php } ?>
-        </select>
-        <br><br>
+        <div class="card-body p-4"> 
 
-        <!-- Class date -->
-        <label>Date:</label><br>
-        <input type="date" name="class_date" required>
-        <br><br>
+            <form method="POST">
 
-        <!-- Class time -->
-        <label>Time:</label><br>
-        <input type="time" name="class_time" required>
-        <br><br>
-        
-        <!-- Class Link -->
-        <label>Google Meet Link:</label><br>
-        <input type="url" name="meet_link" required>
-        <br><br>
+                <!-- SUBJECT --> 
+                <div class="mb-3">
 
-        <!-- Class Status -->
-        <label for="status">Status:</label>
-        <select name="status" required>
+                    <label class="form-label">Select Subject:</label>
 
-            <!-- Default Option -->
-             <option value="Upcoming">Upcoming</option>
+                    <select name="subject_id" class="form-select" required>
 
-            <!-- Option for success --> 
-            <option value="Completed">Completed</option> 
-        </select>
-        <br><br>
+                        <option value="">-- Select Subject --</option>
 
-        <input type="hidden" name="csrf_token"
-                value="<?php echo $csrf_token; ?>">
+                        <?php while ($row = mysqli_fetch_assoc($subjects)) { ?>
 
-        <button type="submit" name="add_class">Add Class</button>
+                        <option value="<?php echo (int)$row['id']; ?>"> 
 
-    </form>
-    
-</body>
-</html>
+                        <?php echo htmlspecialchars($row['subject_name']); ?>
+
+                        </option>
+
+                        <?php } ?>
+
+                    </select>
+
+                </div>
+
+                <!-- CLASS DATE --> 
+                 <div class="mb-3">
+
+                    <label class="form-label">Class Date:</label>
+
+                    <input type="date" name="class_date" 
+                        class="form-control" required>
+
+                 </div>
+
+                <!-- CLASS TIME --> 
+                 <div class="mb-3">
+
+                    <label class="form-label">Class Time:</label>
+
+                    <input type="time" name="class_time" 
+                        class="form-control" required>
+
+                 </div>
+
+                 <!-- MEET LINK --> 
+                  <div class="mb-4">
+
+                    <label class="form-label">Google Meet Link:</label>
+
+                    <input type="url" name="meet_link"
+                        class="form-control" required>
+
+                  </div>
+
+                  <!-- Class Status -->
+                  <div class="mb-4">
+                    
+                    <label class="form-label">Class Status:</label>
+
+                    <select name="status" class="form-select" required>
+
+                        <!-- Default Option -->  
+                        <option value="Upcoming">Upcoming</option>
+
+                        <!-- Option for success --> 
+                        <option value="Completed">Completed</option> 
+
+                    </select>
+
+                  </div>
+
+                  <input type="hidden" name="csrf_token"
+                        value="<?php echo $csrf_token; ?>">
+
+                <button type="submit" name="add_class"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-calendar-plus"></i>
+                    Schedule Class 
+
+                </button>
+
+                <a href="dashboard.php" 
+                    class="btn btn-outline-secondary ms-2">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

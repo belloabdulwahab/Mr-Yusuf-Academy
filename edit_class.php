@@ -118,60 +118,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+include "includes/header.php";
+include "includes/navbar.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Class</title>
-</head>
-<body>
-    <h2>Edit Class</h2>
+<div class="container-fluid"> 
+
+    <div class="row"> 
+    
+    <?php include "includes/sidebar.php"; ?>
+
+    <div class="col-lg-10 ms-auto dashboard-main p-4"> 
+
+        <!-- PAGE HEADER --> 
+        <div class="mb-4">
+            <h3 class="fw-bold">Edit Class</h3>
+            <p class="text-muted mb-0">Update scheduled class details.</p>
+        </div>
 
     <?php display_flash(); ?>
 
-    <form method="post">
+    <div class="card shadow-sm border-0"> 
 
-        <label>Date:</label><br>
-        <input type="date" name="class_date"
-            value="<?php echo htmlspecialchars($class['class_date']); ?>" required>
-        <br><br>
+        <div class="card-body p-4"> 
 
-        <label>Time:</label><br>
-        <input type="time" name="class_time"
-            value="<?php echo htmlspecialchars($class['class_time']); ?>" required>
-        <br><br>
+            <form method="post">
 
-        <label>Google Meet link:</label><br>
-        <input type="url" name="meet_link"
-            value="<?php echo htmlspecialchars($class['meet_link']); ?>" required>
-        <br><br>
+                <!-- CLASS DATE --> 
+                <div class="mb-3">
 
-        <label>Status:</label><br>
-        <select name="status" required>
-            <option value="Upcoming"
-                <?php if ($class['status'] === "Upcoming") echo "selected"; ?>>
-                Upcoming
-            </option>
+                    <label class="form-label">Class Date:</label>
 
-            <option value="Completed"
-                <?php if ($class['status'] === "Completed") echo "selected"; ?>>
-                Completed
-            </option>
+                    <input type="date" name="class_date" class="form-control"
+                        value="<?php echo htmlspecialchars($class['class_date']); ?>" 
+                        required>
 
-        </select>
-        <br><br>
-        <input type="hidden" name="csrf_token"
-                value="<?php echo $csrf_token; ?>">
+                </div>
 
-        <button type="submit" name="update_class">Update Class</button>
+                <!-- CLASS TIME --> 
+                <div class="mb-3">
 
-    </form>
-    <br>
+                    <label class="form-label">Class Time:</label>
 
-    <a href="dashboard.php">Back to Dashboard</a>
+                    <input type="time" name="class_time" class="form-control"
+                        value="<?php echo htmlspecialchars($class['class_time']); ?>" 
+                        required>
 
-</body>
-</html>
+                </div>
+
+                <!-- MEETING LINK -->
+                <div class="mb-3">
+
+                    <label class="form-label">Google Meet link:</label>
+
+                    <input type="url" name="meet_link" class="form-control"
+                        value="<?php echo htmlspecialchars($class['meet_link']); ?>"
+                        required>
+
+                </div>
+
+                <!-- CLASS STATUS -->
+                <div class="mb-4">
+
+                    <label class="form-label">Class Status</label>
+
+                    <select name="status" class="form-select" required>
+
+                        <option value="Upcoming"
+                            <?php if ($class['status'] === "Upcoming") echo "selected"; ?>>
+                            Upcoming 
+                        </option>
+
+                        <option value="Completed"
+                            <?php if ($class['status'] === "Completed") echo "selected"; ?>>
+                            Completed
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <input type="hidden" name="class_id"
+                    value="<?php echo (int)$class['id']; ?>">
+
+                <input type="hidden" name="csrf_token"
+                     value="<?php echo $csrf_token; ?>">
+
+                <button type="submit" name="update_class"
+                        class="btn btn-primary">
+
+                        <i class="bi bi-save"></i>
+                        Update Class
+
+                </button>
+
+                <a href="dashboard.php" 
+                    class="btn btn-outline-secondary ms-2">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

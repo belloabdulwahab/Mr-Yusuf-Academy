@@ -101,44 +101,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+include "includes/header.php";
+include "includes/navbar.php";
+
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Subject</title>
-</head>
-<body>
+<div class="container-fluid">
+
+    <div class="row">
     
-    <h2>Edit Subject</h2>
+    <?php include "includes/sidebar.php"; ?>
+
+    <div class="col-lg-10 ms-auto dashboard-main p-4">
+
+        <div class="mb-4">
+            <h3 class="fw-bold">Edit Subject</h3>
+            <p class="text-muted mb-0">Update subject information.</p>
+        </div>
 
     <?php display_flash(); ?>
 
-    <form method="POST">
+    <div class="card shadow-sm border-0"> 
 
-        <label>Subject Name</label><br>
-        <input type="text" name="subject_name"
-                value="<?php echo htmlspecialchars($subject['subject_name']); ?>"
-             required>
-        <br><br>
+        <div class="card-body p-4"> 
 
-        <label>Price</label><br>
-        <input type="number" name="price" step="0.01" min="0"
-                value="<?php echo htmlspecialchars($subject['price']); ?>"
-            required>
-        <br><br>
+            <form method="POST">
 
-        <input type="hidden" name="csrf_token" 
-                value="<?php echo $csrf_token; ?>">
+                <div class="mb-3">
 
-        <button type="submit">Update Subject</button>
+                    <label class="form-label">Subject Name</label>
+                    <input type="text" name="subject_name"
+                        class="form-control"
+                        value="<?php echo htmlspecialchars($subject['subject_name']); ?>"
+                        required>
 
-    </form>
+                </div>
 
-    <br>
-    <a href="dashboard.php">Back to Dashboard</a>
+                <div class="mb-4">
 
-</body>
-</html>
+                    <label class="form-label">Price (&#8358;)</label>
+                    <input type="number" name="price" step="0.01" min="0"
+                        class="form-control"
+                        value="<?php echo htmlspecialchars($subject['price']); ?>"
+                        required>
+
+                </div>
+
+                <input type="hidden" name="csrf_token" 
+                        value="<?php echo $csrf_token; ?>">
+
+                <button type="submit"
+                    class="btn btn-primary">
+                    
+                    <i class="bi bi-save"></i>
+                    Update Subject
+
+                </button>
+
+                <a href="dashboard.php"
+                    class="btn btn-outline-secondary ms-2">
+
+                    Cancel 
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

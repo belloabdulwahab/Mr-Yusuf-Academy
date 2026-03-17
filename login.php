@@ -103,33 +103,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 }
+
+include "includes/header.php";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    
-    <h2>Login</h2>
 
-    <?php display_flash(); ?>
+    <div class="auth-container">
 
-    <form method="POST">
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <div class="auth-card">
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+            <div class="text-center mb-4">
 
-        <input type="hidden" name="csrf_token"
-                value="<?php echo $csrf_token; ?>">
+                <h3 class="fw-bold text-primary">
+                    Mr Yusuf Academy 
+                </h3>
 
-        <button type="submit" name="login">Login</button>
-    </form>
+                <p class="text-muted">
+                    Sign in to your account
+                </p>
 
-</body>
+            </div>
 
-</html>
+            <?php display_flash(); ?>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">Email Address:</label><!-- <br> --> 
+                    
+                    <input type="email" name="email" class="form-control" required><!-- <br><br> --> 
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">Password:</label><!-- <br> --> 
+
+                    <input type="password" name="password" class="form-control" required><!-- <br><br> --> 
+
+                </div>
+
+                <input type="hidden" name="csrf_token"
+                        value="<?php echo $csrf_token; ?>">
+
+                <button type="submit" name="login"
+                        class="btn btn-primary w-100">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="text-center mt-3">
+
+                <small class="text-muted">
+                    Don't have an account? 
+                    <a href="register.php">Register</a>
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<?php include "includes/footer.php"; ?>

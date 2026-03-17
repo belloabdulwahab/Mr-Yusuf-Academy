@@ -86,35 +86,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+include "includes/header.php"; 
+include "includes/navbar.php";
+
 ?>
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Add Subject</title>
-    </head>
+<div class="container-fluid"> 
 
-    <body>
-        
-    <h2>Add Subject</h2>
+    <div class="row"> 
 
-    <?php display_flash(); ?>
+    <?php include "includes/sidebar.php"; ?>
 
-    <form method="POST">
-        <label>Subject Name</label><br>
-        <input type="text" name="subject_name" required>
-        <br><br>
+        <div class="col-lg-10 ms-auto dashboard-main p-4">
 
-        <label>Price</label><br>
-        <input type="number" name="price" step="0.01" min="0" required>
-        <br><br>
+            <div class="mb-4">
+                <h3 class="fw-bold">Add Subject</h3>
+                <p class="text-muted mb-0">Create a new subject for students.</p>
+            </div>
 
-        <input type="hidden" name="csrf_token"
-                value="<?php echo $csrf_token; ?>">
-                
-        <button type="submit" name="add_subject">Add subject</button>
-    </form>
+            <?php display_flash(); ?>
 
-    </body>
+            <div class="card shadow-sm border-0">
 
-</html>
+                <div class="card-body p-4">
+
+                    <form method="POST">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Subject Name</label>
+
+                            <input type="text" name="subject_name"
+                                class="form-control" required>
+
+                        </div>
+                        
+                        <div class="mb-4">
+
+                            <label class="form-label">Price (&#8358;)</label>
+
+                            <input type="number" name="price"
+                                class="form-control" step="0.01" min="0" required>
+
+                        </div>
+
+                        <input type="hidden" name="csrf_token"
+                            value="<?php echo $csrf_token; ?>">
+
+                        <button type="submit" name="add_subject"
+                                class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i>
+                            Add Subject 
+
+                        </button>
+
+                        <a href="dashboard.php"
+                            class="btn btn-outline-secondary ms-2">
+                            Cancel
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

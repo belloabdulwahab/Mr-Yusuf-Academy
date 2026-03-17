@@ -82,30 +82,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+include "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Register</title>
-    </head>
+<div class="auth-container">
 
-    <body>
+    <div class="auth-card">
+
+        <div class="text-center mb-4">
+
+            <h3 class="fw-bold text-primary">
+                Mr Yusuf Academy 
+            </h3>
+
+            <p class="text-muted">
+                Create your student account 
+            </p>
+
+        </div>
+
+        <?php display_flash(); ?>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">Full Name:</label>
+
+                <input type="text" name="name" 
+                        placeholder="Full Name" 
+                        class="form-control"
+                        required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">Email Address:</label>
+
+                <input type="email" name="email" 
+                        placeholder="Email" 
+                        class="form-control"
+                        required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">Password:</label>
+
+                <input type="password" name="password" 
+                        placeholder="Password" 
+                        class="form-control"
+                        required>
+
+            </div>
+
+            <input type="hidden" name="csrf_token"
+                    value="<?php echo $csrf_token; ?>">
+
+            <button type="submit" name="register"
+                    class="btn btn-primary w-100">
+                Create Account 
+            </button>
+
+        </form>
+
+        <div class="text-center mt-3">
+
+            <small class="text-muted">
+                Already have an account? 
+                <a href="login.php">Login</a>
+            </small>
+
+        </div>
         
-    <h2>Student Registration</h2>
+    </div>
 
-<?php display_flash(); ?>
+</div>
 
-    <form method="POST">
-        <input type="text" name="name" placeholder="Full Name" required><br><br>
-        <input type="email" name="email" placeholder="Email" required><br><br>
-        <input type="password" name="password" placeholder="Password" required><br><br>
-        <input type="hidden" name="csrf_token"
-                value="<?php echo $csrf_token; ?>">
-        <button type="submit" name="register">Register</button>
-    </form>
-
-    <a href="login.php">Already have an account? Login</a>
+<?php include "includes/footer.php"; ?>
     
-    </body>
-</html>
