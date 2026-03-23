@@ -63,7 +63,7 @@ $stmt_next = mysqli_prepare(
     "SELECT class_date, class_time, meet_link
     FROM classes 
     WHERE subject_id = ?
-    AND status = 'upcoming' 
+    AND status = 'Upcoming' 
     ORDER BY class_date ASC, class_time ASC
     LIMIT 1"
 );

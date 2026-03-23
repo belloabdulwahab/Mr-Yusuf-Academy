@@ -131,7 +131,7 @@ include "includes/navbar.php";
 
                 /* Upcoming Classes */
                 $query_upcoming = "SELECT COUNT(*) AS upcoming_classes
-                                    FROM classes WHERE status='upcoming'";
+                                    FROM classes WHERE status='Upcoming'";
                 $result_upcoming = mysqli_query($conn, $query_upcoming);
                 $total_upcoming = mysqli_fetch_assoc($result_upcoming)['upcoming_classes'] ?? 0;
                 ?>

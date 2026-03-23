@@ -1,22 +1,26 @@
 TEACHER_SITE 
     /assets 
-        /css/style.css 
-        /js/app.js 
+        /css/style.css ==
+        /js/app.js ==
     /includes 
-        footer.php 
-        header.php 
-        navbar.php 
-        sidebar.php 
+        footer.php ==
+        header.php ==
+        navbar.php ==
+        sidebar.php ==
     .gitignore 
-    add_class.php 
-    add_subject.php 
-    dashboard.php 
-    db.php 
-    delete_class.php 
-    delete_subject.php 
-    edit_class.php 
-    edit_subject.php 
-    enrollment.php 
-    flash.php 
-    login.php 
-    logout.php 
+    add_class.php == 
+    add_subject.php ==
+    dashboard.php ==
+    db.php ==
+    delete_class.php ==
+    delete_subject.php ==
+    edit_class.php ==
+    edit_subject.php ==
+    enrollment.php == 
+    flash.php ==
+    login.php ==
+    logout.php ==
+    register.php ==
+    security.php ==
+    subject.php ==
+

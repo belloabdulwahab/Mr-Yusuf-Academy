@@ -20,14 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = strtolower(trim($_POST['email'] ?? ''));
     $password = $_POST['password'] ?? '';
 
+
+    $errors = false; 
+
     if (empty($name)) {
         set_flash("error", "Name is required.");
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors = true;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         set_flash("error", "Invalid email.");
-    } elseif (strlen($password) < 6) {
+        $errors = true;
+    }
+
+    if (strlen($password) < 6) {
         set_flash("error", "Password must be at least 6 characters.");
-    } else {
-        // proceed
+        $errors = true;
+    }
+
+    if ($errors) {
+        header("Location: register.php");
+        exit;
     }
 
     // hash password

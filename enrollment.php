@@ -27,6 +27,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
 
+        $check_stmt = mysqli_prepare(
+            $conn, 
+            "SELECT 1 FROM student_subjects
+            WHERE user_id = ? AND subject_id = ?"
+        ); 
+
+        mysqli_stmt_bind_param($check_stmt, "ii", $user_id, $subject_id);
+        mysqli_stmt_execute($check_stmt);
+        $check_result = mysqli_stmt_get_result($check_stmt);
+
+        if (mysqli_num_rows($check_result) > 0) {
+            mysqli_stmt_close($check_stmt);
+
+            set_flash("error", "You are already enrolled in this subject.");
+            header("Location: enrollment.php");
+            exit;
+        }
+
+        mysqli_stmt_close($check_stmt);
+        
         $stmt = mysqli_prepare(
             $conn,
             "INSERT INTO student_subjects (user_id, subject_id)
