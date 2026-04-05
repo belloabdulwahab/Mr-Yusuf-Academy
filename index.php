@@ -23,4 +23,3 @@ TEACHER_SITE
     register.php ==
     security.php ==
     subject.php ==
-

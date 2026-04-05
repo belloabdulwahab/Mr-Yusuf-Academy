@@ -8,11 +8,12 @@ include "flash.php";
 require_login();
 
 /* Get user's data */
-$user_id = (int) $_SESSION['user_id'];
-$role = $_SESSION['role'];
-$name = htmlspecialchars($_SESSION['name']);
+$user_id = (int) $_SESSION['user_id'] ?? 0;
+$role = $_SESSION['role'] ?? '';
+$name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
 
-/* Include shared layout */
+$csrf_token = generate_csrf_token();
+
 include "includes/header.php";
 include "includes/navbar.php";
 ?>
@@ -44,7 +45,7 @@ include "includes/navbar.php";
             <?php
 
             /* ADMIN DASHBOARD */
-            if ($role === 'admin') { ?> 
+            if (($role ?? '') === 'admin') { ?> 
             
             <!-- ======== ADMIN ANALYTICS ========= --> 
              <div class="row g-4 mb-4">
@@ -193,8 +194,6 @@ include "includes/navbar.php";
                 mysqli_stmt_execute($stmt_subjects_admin);
                 $subjects_admin = mysqli_stmt_get_result($stmt_subjects_admin);
 
-                $csrf_token = generate_csrf_token();
-
                 if (mysqli_num_rows($subjects_admin) > 0) {
 
                     while ($row = mysqli_fetch_assoc($subjects_admin)) {
@@ -214,7 +213,7 @@ include "includes/navbar.php";
                         <div> 
 
                             <strong class="fs-5">
-                                <?php echo htmlspecialchars($row['subject_name']); ?>
+                                <?php echo htmlspecialchars($row['subject_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </strong>
 
                             <div class="text-muted small mt-1">
@@ -313,15 +312,15 @@ include "includes/navbar.php";
                             </div>
 
                             <strong>Subject:</strong>
-                            <?php echo htmlspecialchars($row['subject_name']); ?><br>
+                            <?php echo htmlspecialchars($row['subject_name'], ENT_QUOTES, 'UTF-8'); ?><br>
 
                             <strong>Date:</strong>
-                            <?php echo htmlspecialchars($row['class_date']); ?><br>
+                            <?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?><br>
 
                             <strong>Time:</strong>
-                            <?php echo htmlspecialchars($row['class_time']); ?><br>
+                            <?php echo htmlspecialchars($row['class_time'], ENT_QUOTES, 'UTF-8'); ?><br>
 
-                            <a href="<?php echo htmlspecialchars($row['meet_link']); ?>"
+                            <a href="<?php echo htmlspecialchars($row['meet_link'], ENT_QUOTES, 'UTF-8'); ?>"
                                 target="_blank"
                                 rel="noopener noreferrer">
                                 Join Class
@@ -420,7 +419,7 @@ include "includes/navbar.php";
                                             <div> 
 
                                                 <h6 class="mb-1 fw-semibold">
-                                                    <?php echo htmlspecialchars($row['subject_name']); ?>
+                                                    <?php echo htmlspecialchars($row['subject_name'], ENT_QUOTES, 'UTF-8'); ?>
                                                 </h6>
 
                                                 <small class="text-muted">
@@ -505,18 +504,18 @@ include "includes/navbar.php";
                         <div>
                             <small class="text-muted">Next Class</small>
                             <h5 class="mb-1">
-                                <?php echo htmlspecialchars($row['subject_name']); ?>
+                                <?php echo htmlspecialchars($row['subject_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </h5>
 
                             <span class="text-muted">
-                                <?php echo htmlspecialchars($row['class_date']); ?>
+                                <?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?>
                                 • 
-                                <?php echo htmlspecialchars($row['class_time']); ?>
+                                <?php echo htmlspecialchars($row['class_time'], ENT_QUOTES, 'UTF-8'); ?>
                             </span>
                         </div>
 
                         <div>
-                            <a href="<?php echo htmlspecialchars($row['meet_link']); ?>"
+                            <a href="<?php echo htmlspecialchars($row['meet_link'], ENT_QUOTES, 'UTF-8'); ?>"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="btn btn-success">
@@ -541,15 +540,15 @@ include "includes/navbar.php";
                             <div class="card-body">
 
                                 <strong>Subject:</strong>
-                                <?php echo htmlspecialchars($row['subject_name']); ?><br>
+                                <?php echo htmlspecialchars($row['subject_name'], ENT_QUOTES, 'UTF-8'); ?><br>
 
                                 <strong>Date:</strong>
-                                <?php echo htmlspecialchars($row['class_date']); ?><br>
+                                <?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?><br>
 
                                 <strong>Time:</strong>
-                                <?php echo htmlspecialchars($row['class_time']); ?><br>
+                                <?php echo htmlspecialchars($row['class_time'], ENT_QUOTES, 'UTF-8'); ?><br>
 
-                                <a href="<?php echo htmlspecialchars($row['meet_link']); ?>"
+                                <a href="<?php echo htmlspecialchars($row['meet_link'], ENT_QUOTES, 'UTF-8'); ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="btn btn-sm btn-success">

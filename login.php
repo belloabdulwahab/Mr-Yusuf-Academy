@@ -14,6 +14,8 @@ $csrf_token = generate_csrf_token();
 /* Handle Login Form Submission */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    check_login_attempts();
+
     verify_csrf_token($_POST['csrf_token'] ?? null);
 
     /* Collect login input */
@@ -24,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         !filter_var($email, FILTER_VALIDATE_EMAIL) ||
         empty($password)
     ) {
+        record_failed_login();
         set_flash("error", "Invalid email or password.");
         header("Location: login.php");
         exit;
@@ -49,12 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* Bind email parameter (s = string) */
         mysqli_stmt_bind_param($stmt, "s", $email);
 
-        // Execute
         mysqli_stmt_execute($stmt);
 
-        // Get Result
         $result = mysqli_stmt_get_result($stmt);
-
 
         /* Check if user exist */
         if (mysqli_num_rows($result) === 1) {
@@ -74,6 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['name'] = $user['name'];
                 $_SESSION['role'] = $user['role'];
 
+                reset_login_attempts();
+
                 // Close statement 
                 mysqli_stmt_close($stmt);
 
@@ -82,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
 
             } else {
+                record_failed_login();
                 mysqli_stmt_close($stmt);
                 set_flash("error", "Invalid email or password.");
                 header("Location: login.php");
@@ -89,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         
         } else {
+            record_failed_login();
             mysqli_stmt_close($stmt);
             set_flash("error", "Invalid email or password.");
             header("Location: login.php");
