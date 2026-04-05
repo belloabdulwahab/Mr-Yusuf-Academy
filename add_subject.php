@@ -1,15 +1,13 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Access Control - ADMIN ONLY */
 require_admin();
 
 $csrf_token = generate_csrf_token();
-
-$message = "";
 
 /* Handle Add Subject Form Submission */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* Strict Validation */
     if (
         empty($subject_name) ||
+        strlen($subject_name) > 20 ||
         !filter_var($price, FILTER_VALIDATE_FLOAT) ||
         $price < 0
     ) {
@@ -43,7 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if (!$stmt) {
-            throw new Exception("Preparation failed.");
+            error_log("Add subject preparation failed.");
+            set_flash("error", "Something went wrong.");
+            header("Location: add_subject.php");
+            exit;
         }
 
         /* Bind parameters: 

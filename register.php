@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Prevents logged-in users from registering again */
 if (isset($_SESSION['user_id'])) {
@@ -25,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name)) {
         set_flash("error", "Name is required.");
+        $errors = true;
+    } elseif (strlen($name) > 50) {
+        set_flash("error", "Name is too long.");
         $errors = true;
     }
 

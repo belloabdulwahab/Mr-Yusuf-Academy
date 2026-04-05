@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Access Control - Only Admin can access */
 require_admin();
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject_id = $_POST['subject_id'] ?? '';
     $class_date = $_POST['class_date'] ?? '';
     $class_time = $_POST['class_time'] ?? '';
-    $meet_link = $_POST['meet_link'] ?? '';
+    $meet_link = trim($_POST['meet_link'] ?? '');
     $status = $_POST['status'] ?? '';
 
     /* Strict Validation */
@@ -47,7 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if (!$stmt) {
-            throw new Exception("Preparation failed.");
+            error_log("Add class preparation failed.");
+            set_flash("error", "Something went wrong.");
+            header("Location: add_class.php");
+            exit;
         }
 
         /* BIND PARAMETERS 
@@ -75,7 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
 
  } catch (mysqli_sql_exception $e) {
-
+        
+        error_log("Add class error: " . $e->getMessage());
+        
         /* Duplicate entry error code */
         if ($e->getCode() == 1062) {
 

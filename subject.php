@@ -1,7 +1,7 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
+require_once "security.php";
+require_once "db.php";
 
 require_student();
 
@@ -49,6 +49,11 @@ $stmt_subject = mysqli_prepare(
     $conn, 
     "SELECT subject_name FROM subjects WHERE id = ?"
 );
+
+if (!$stmt_subject) {
+    error_log("Subject fetch prepare failed.");
+    exit("Something went wrong.");
+}
 
 mysqli_stmt_bind_param($stmt_subject, "i", $subject_id);
 mysqli_stmt_execute($stmt_subject);
