@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Access Control - ADMIN ONLY */
 require_admin();
@@ -33,7 +33,10 @@ try {
     );
 
     if(!$stmt) {
-        throw new Exception("Preparation failed.");
+        error_log("Delete subject reparation failed.");
+        set_flash("error", "Something went wrong.");
+        header("Location: dashboard.php");
+        exit;
     }
 
     mysqli_stmt_bind_param($stmt, "i", $subject_id);
@@ -47,6 +50,9 @@ try {
     }
 
     mysqli_stmt_close($stmt);
+
+    header("Location: dashboard.php");
+    exit;
 
 } catch (mysqli_sql_exception $e) {
     

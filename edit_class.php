@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Access control - ADMIN ONLY */
 require_admin();
@@ -28,7 +28,9 @@ $stmt = mysqli_prepare(
 
 if (!$stmt) {
     error_log("Edit class SELECT preparation failed.");
-    exit("Something went wrong.");
+    set_flash("error", "Something went wrong.");
+    header("Location: dashboard.php");
+    exit;
 }
 
 mysqli_stmt_bind_param($stmt, "i", $class_id);
@@ -52,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $class_date = $_POST['class_date'] ?? '';
     $class_time = $_POST['class_time'] ?? '';
-    $meet_link = $_POST['meet_link'] ?? '';
+    $meet_link = trim($_POST['meet_link'] ?? '');
     $status = $_POST['status'] ?? '';
 
     if (
@@ -80,7 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if (!$stmt) {
-            throw new Exception("Preparation failed.");
+            error_log("Edit class UPDATE preparation failed.");
+            set_flash("error", "Something went wrong.");
+            header("Location: edit_class.php?id=" . $class_id);
+            exit;
         }
 
         /* BIND PARAMETERS:

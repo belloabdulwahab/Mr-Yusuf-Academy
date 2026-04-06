@@ -1,8 +1,8 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
 
 /* Access Control - ADMIN ONLY */
 require_admin();
@@ -10,7 +10,7 @@ require_admin();
 /* Validate ID from URL */
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
     http_response_code(400);
-    exit("Invalid subject ID.");
+    exit;
 }
 
 $subject_id = (int) $_GET['id'];
@@ -24,7 +24,9 @@ $stmt = mysqli_prepare(
 
 if (!$stmt) {
     error_log("Edit subject SELECT preparation failed.");
-    exit("Something went wrong.");
+    set_flash("error", "Something went wrong.");
+    header("Location: dashboard.php");
+    exit;
 }
 
 mysqli_stmt_bind_param($stmt, "i", $subject_id);
@@ -49,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (
         empty($subject_name) ||
-        !is_numeric($price) ||
+        strlen($subject_name) > 20 ||
+        !filter_var($price, FILTER_VALIDATE_FLOAT) ||
         $price < 0
     ) {
         set_flash("error", "Invalid input.");
@@ -69,7 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if (!$stmt) {
-            throw new Exception("Preparation failed.");
+            error_log("Edit subject UPDATE preparation failed.");
+            set_flash("error", "Something went wrong.");
+            header("Location: edit_subject.php?id=" . $subject_id);
+            exit;
         }
 
         mysqli_stmt_bind_param(

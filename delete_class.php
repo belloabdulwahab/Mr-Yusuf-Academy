@@ -1,18 +1,18 @@
 <?php
 session_start();
-include "security.php";
-include "db.php";
-include "flash.php";
+require_once "security.php";
+require_once "db.php";
+require_once "flash.php";
+
+/* Only Admin can Delete 
+    Authentication and Authorization */
+require_admin();
 
 /* Only Allow POST Requests */
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     exit("Method not allowed.");
 }
-
-/* Only Admin can Delete 
-    Authentication and Authorization */
-require_admin();
 
 verify_csrf_token($_POST['csrf_token'] ?? null);
 
@@ -35,7 +35,10 @@ $stmt = mysqli_prepare(
 );
 
 if (!$stmt) {
-    throw new Exception("Preparation failed.");
+    error_log("Delete class preparation failed.");
+    set_flash("error", "Something went wrong.");
+    header("Location: dashboard.php");
+    exit;
 }
 
 /* Bind Parameter (i = integer) */
@@ -56,6 +59,9 @@ if (mysqli_stmt_affected_rows($stmt) > 0) {
 
 // Close statement
 mysqli_stmt_close($stmt);
+
+header("Location: dashboard.php");
+exit;
 
 } catch (mysqli_sql_exception $e) {
     error_log("Delete class error: " . $e->getMessage());
