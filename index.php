@@ -12,7 +12,7 @@ TEACHER_SITE
     add_subject.php
     dashboard.php
     db.php
-    delete_class.php
+    delete_class.php 
     delete_subject.php
     edit_class.php 
     edit_subject.php 
