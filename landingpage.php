@@ -1,0 +1,521 @@
+<?php
+session_start();
+require_once "db.php";
+
+/* Fetch subjects */
+$stmt = mysqli_prepare(
+    $conn, 
+    "SELECT id, subject_name, price FROM subjects ORDER BY subject_name ASC"
+);
+
+mysqli_stmt_execute($stmt);
+$subjects = mysqli_stmt_get_result($stmt);
+mysqli_stmt_close($stmt);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr Yusuf Academy</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        
+        /* GLOBAL */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links .nav-link {
+            position: relative;
+            margin-left: 25px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-links .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0%;
+            height: 2px;
+            background: #0d6efd;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* HERO (kept but improved spacing only) */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #0d6efd, #4dabf7);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .hero h3{
+            font-size: 2rem;
+        }
+
+        /* ABOUT */
+        .about-section {
+            background: #f8f9fa;
+        }
+
+        .about-img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        /* SUBJECTS */
+        .subject-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .price {
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
+        /* WHY */
+        .why {
+            background: white;
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: #0d6efd;
+        }
+
+        /* SERVICES */
+        .service-section {
+            background: #f8f9fa;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+        }
+
+        /* HOW IT WORKS */
+        .how {
+            background: #f8f9fa;
+            text-align: center;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, #0d6efd, #4dabf7);
+            color: white;
+            text-align: center;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0f172a;
+            color: #ccc;
+        }
+
+        .footer-link {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+            color: #0a58ca;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR --> 
+     <nav class="navbar fixed-top shadow-sm">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="navbar-brand fw-bold text-primary">Mr Yusuf Academy</a>
+            
+                <div class="nav-links d-flex align-items-center ms-auto">
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#subjects" class="nav-link">Subjects</a>
+                    <a href="#services" class="nav-link">Services</a>
+                    <a href="register.php" class="nav-link">
+                        <button class="btn btn-sm btn-success" style="border-radius: 20px;">
+                            Sign Up/Login
+                        </button>
+                    </a>
+                </div>
+        </div>
+     </nav>
+
+     <!-- HERO SECTION -->
+      <section class="hero">
+        <div class="container text-center">
+            <h1 class="text-white">Achieve Academic Excellence with Expert Guidance</h1>
+            <p>
+                Learn from an award-winning STEM specialist with a proven track record
+                of training 600+ students for success in WAEC, NECO, JAMB, IGCSE, SAT & GRE.
+                Experience a modern, results-driven approach designed to make complex concepts 
+                simple and mastery achievable.
+            </p>
+
+            <a href="register.php" class="btn btn-primary btn-lg mt-3">
+            Get Started <i class="bi bi-arrow-right"></i>
+            </a>
+
+            <h3 class="text-muted mt-5">Structured learning | Proven results | Real improvement</h3>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+       <section id="about" class="about-section">
+        <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-md-6">
+                <h2 class="mb-4">About Mr Yusuf</h2>
+                <h5 class="fw-bold">Yusuf Onimisi, M.Ed (PhD in Progress)</h5>
+                    <p class="text-primary">Award-Winning STEM Specialist & Academic Consultant</p>
+
+                    <p>
+                    With over a decade of experience and the prestigious "Best Teacher of the Decade" award by MEIS, Mr Yusuf delivers world-class tutoring that transforms academic struggle into excellence.
+                    </p>
+
+                    <p>
+                    He uses a <strong>Flipped Classroom approach</strong>—a modern method that ensures students understand concepts before class, leading to deeper mastery and confidence.
+                    </p>
+
+                    <hr>
+
+                    <h6 class="fw-bold">Proven Track Record</h6>
+                        <ul>
+                            <li>600+ students trained</li>
+                            <li>Top results in WAEC, NECO, JAMB, IGCSE, SAT & GRE</li>
+                        </ul>
+
+                    <h6 class="fw-bold mt-3">Credentials</h6>
+                        <ul>
+                            <li>TRCN Registered</li>
+                            <li>M.Ed. (Mathematics Education)</li>
+                            <li>B.Sc. Physics Education (First Class)</li>
+                            <li>Diploma in Computer Engineering</li>
+                        </ul>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <img src="includes\images\Mr Yusuf pic.jpeg" class="about-img">
+            </div>
+
+        </div>
+        </div>
+       </section>
+
+       <!-- SUBJECTS --> 
+        <section id="subjects">
+            <div class="container">
+            <h2 class="text-center mb-4">Subject Expertise</h2>
+
+            <div class="row g-4">
+
+                <?php while ($subject = mysqli_fetch_assoc($subjects)): ?>
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="subject-card p-4 text-center h-100">
+                            
+                            <i class="bi bi-book fs-1 text-primary mb-3"></i>
+
+                            <h5 class="fw-bold">
+                                <?php echo htmlspecialchars($subject['subject_name']); ?>
+                            </h5>
+
+                            <a href="register.php" class="btn btn-outline-primary">
+                                Enroll
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <?php endwhile; ?>
+
+            </div>
+        </section>
+        
+        <!-- SERVICES -->
+        <section id="services" class="service-section">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Services</h2>
+
+            <div class="row g-4">
+
+                <div class="col-md-3">
+                    <div class="service-card">
+                        <i class="bi bi-person fs-1 text-primary"></i>
+                        <h5 class="mt-3">One-on-One Teaching</h5>
+                        <p>Personalized 1-on-1 physical coaching tailored to each student's needs</p>
+
+                        <a href="https://wa.me/2348132182911" target="_blank" class="btn btn-success mt-2">
+                            <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="service-card">
+                        <i class="bi bi-people fs-1 text-primary"></i>
+                        <h5 class="mt-3">Group Classes</h5>
+                        <p>Interactive group classes that encourage collaboration and deeper understanding</p>
+
+                        <a href="https://wa.me/2348132182911" target="_blank" class="btn btn-success mt-2">
+                            <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="service-card">
+                        <i class="bi bi-journal-text fs-1 text-primary"></i>
+                        <h5 class="mt-3">Exam Prep</h5>
+                        <p>Targeted preparation for WAEC, NECO, JAMB, IGCSE, SAT & GRE exams</p>
+
+                        <a href="https://wa.me/2348132182911" target="_blank" class="btn btn-success mt-2">
+                            <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="service-card">
+                        <i class="bi bi-laptop fs-1 text-primary"></i>
+                        <h5 class="mt-3">Online Lessons</h5>
+                        <p>Flexible online lessons and home tutoring options for convenience</p>
+
+                        <a href="register.php" class="btn btn-primary mt-2">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </section>
+
+        <!-- WHY -->
+        <section class="why">
+        <div class="container text-center">
+            <h2 class="mb-5">Why Students Choose Us</h2>
+
+            <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature">
+                <i class="bi bi-check-circle"></i>
+                <h5>Proven Track Record</h5>
+                <p>600+ students trained with outstanding results across major exams</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature">
+                <i class="bi bi-lightbulb"></i>
+                <h5>Advanced Teaching Method</h5>
+                <p>Flipped classroom approach that ensures deep understanding before class</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature">
+                <i class="bi bi-people"></i>
+                <h5>Live Classes</h5>
+                <p>Interactive and engaging sessions guided by an award-winning STEM specialist</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+         <!-- HOW IT WORKS -->
+          <section class="how">
+            <div class="container py-5 text-center">
+                <h2 class="mb-4">How It works</h2>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <h5>1. Sign Up</h5>
+                        <p>Create your account and login</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5>2. Enroll in a course</h5>
+                        <p>Choose your subjects and preferred learning plan</p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5>3. Start Learning & Improve</h5>
+                        <p>Attend classes, build mastery, and achieve better results</p>
+                    </div>
+
+                </div>
+            </div>
+          </section>
+
+          <!-- CTA -->
+           <section class="cta text-center">
+            <div class="container">
+                <h2>Start Preparing Today!</h2>
+                <a href="register.php" class="btn btn-primary mt-3">
+                    Get Started
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+           </section>
+
+           <!-- FOOTER --> 
+            <footer class="footer">
+                <div class="container py-5">
+                    <div class="row">
+
+                        <!-- LEFT --> 
+                         <div class="col-md-4">
+                            <h5>Mr Yusuf</h5>
+                            <p>Delivering world-class STEM education with proven results in WAEC, NECO, JAMB, IGCSE, SAT & GRE.</p>
+
+                            <p>
+                                <i class="bi bi-telephone"></i> 
+                                <a href="tel:+2348132182911" class="footer-link">08132182911</a>
+                            </p>
+
+                            <p>
+                                <i class="bi bi-envelope"></i> 
+                                <a href="mailto:comradeyusufonimisi@gmail.com" class="footer-link">
+                                    comradeyusufonimisi@gmail.com
+                                </a>
+                            </p>
+                         </div>
+
+                         <!-- CENTER --> 
+                          <div class="col-md-4">
+                            <h5>Quick Links</h5>
+                            <ul class="list-unstyled">
+                                <li><a class="footer-link" href="#">Home</a></li>
+                                <li><a class="footer-link" href="login.php">Login</a></li>
+                                <li><a class="footer-link" href="register.php">Register</a></li>
+                            </ul>
+                          </div>
+
+                          <!-- RIGHT --> 
+                           <div class="col-md-4">
+                                <h5>Socials</h5>
+                                <p>
+                                    <i class="bi bi-facebook"></i>
+                                    <a class="footer-link" href="https://www.facebook.com/share/177SuTeDCc/?mibextid=wwXIfr" target="_blank">
+                                        Facebook
+                                    </a>
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-instagram"></i>
+                                    <a class="footer-link" href="https://www.instagram.com/yuzzywise1?igsh=MXhtNjlkcWZ3eHk5bg%3D%3D&utm_source=qr" target="_blank">
+                                        Instagram
+                                    </a>
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-youtube"></i>
+                                    <a class="footer-link" href="https://youtube.com/@mryusufexplains923?si=Hd7bO-1sGlxCLcX9" target="_blank">
+                                        YouTube
+                                    </a>
+                                </p>
+                           </div>
+
+                    </div>
+                </div>
+
+                <div class="footer-bottom text-center">
+                    © <?php echo date("Y"); ?> Mr Yusuf Academy | Built by 
+                    <a class="footer-link" href="https://wa.me/2349070602504" target="_blank">
+                        Abdulwahab
+                    </a>
+                </div>
+
+            </footer>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
