@@ -163,18 +163,6 @@ body {
 }
 
 
-/* ======= RESPONSIVE ======== */
-
-@media(max-width: 768px) {
-    
-    .dashboard-header{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-}
-
 /* ======== AUTH PAGES (Login and Register) ======== */
 
 .auth-container {
@@ -280,4 +268,26 @@ body {
 .next-class-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+/* ======= EYE ICON ========= */
+i.bi {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+i.bi:hover {
+    color: #0d6efd;
+}
+
+/* ======= RESPONSIVE ======== */
+
+@media(max-width: 768px) {
+    
+    .dashboard-header{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
 }
