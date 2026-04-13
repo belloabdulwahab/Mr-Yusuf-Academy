@@ -12,6 +12,7 @@ $user_id = (int) $_SESSION['user_id'] ?? 0;
 $role = $_SESSION['role'] ?? '';
 $name = htmlspecialchars($_SESSION['name'] ?? '', ENT_QUOTES, 'UTF-8');
 
+
 $csrf_token = generate_csrf_token();
 
 include "includes/header.php";
@@ -240,7 +241,7 @@ include "includes/navbar.php";
                             <input type="hidden" name="id" value="<?php echo $subject_id; ?>">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
 
-                            <button class="btn btn-sm btn-outline-danger">
+                            <button class="btn btn-sm btn-outline-danger" disabled>
                                 <i class="bi bi-trash"></i>
                                 Delete
                             </button>
@@ -385,10 +386,11 @@ include "includes/navbar.php";
                 /* Fetch Enrolled Subjects */
                 $stmt_subjects = mysqli_prepare(
                     $conn, 
-                    "SELECT s.id, s.subject_name, s.price
+                    "SELECT DISTINCT s.id, s.subject_name, s.price
                     FROM subjects s
-                    JOIN student_subjects ss ON s.id = ss.subject_id
-                    WHERE ss.user_id = ?"
+                    JOIN enrollments e ON s.id = e.subject_id
+                    WHERE e.user_id = ?
+                    AND e.end_date >= NOW()"
                 );
 
                 mysqli_stmt_bind_param($stmt_subjects, "i", $user_id);
@@ -462,11 +464,12 @@ include "includes/navbar.php";
                 /* Fetch classes for Enrolled subjects */
                 $stmt_classes = mysqli_prepare(
                     $conn,
-                    "SELECT c.class_date, c.class_time, c.meet_link, s.subject_name
+                    "SELECT DISTINCT c.class_date, c.class_time, c.meet_link, s.subject_name
                     FROM classes c
                     JOIN subjects s ON c.subject_id = s.id
-                    JOIN student_subjects ss ON ss.subject_id = c.subject_id
-                    WHERE ss.user_id = ?
+                    JOIN enrollments e ON e.subject_id = c.subject_id
+                    WHERE e.user_id = ?
+                    AND e.end_date >= NOW()
                     AND c.status = 'Upcoming'
                     ORDER BY c.class_date ASC, c.class_time ASC"
                 );
@@ -481,11 +484,12 @@ include "includes/navbar.php";
                 /* NEXT CLASS WIDGET */
                 $stmt_next = mysqli_prepare(
                     $conn, 
-                    "SELECT c.class_date, c.class_time, c.meet_link, s.subject_name
+                    "SELECT DISTINCT c.class_date, c.class_time, c.meet_link, s.subject_name
                     FROM classes c
                     JOIN subjects s ON c.subject_id = s.id
-                    JOIN student_subjects ss ON ss.subject_id = c.subject_id
-                    WHERE ss.user_id = ?
+                    JOIN enrollments e ON e.subject_id = c.subject_id
+                    WHERE e.user_id = ?
+                    AND e.end_date >= NOW()
                     AND c.status = 'Upcoming' 
                     ORDER BY c.class_date ASC, c.class_time ASC
                     LIMIT 1"

@@ -6,6 +6,12 @@
 /* Load environment variables */
 $env = parse_ini_file(__DIR__ . '/.env');
 
+if (!$env) {
+    error_log("Failed to load .env file");
+    http_response_code(500);
+    exit("Server configuration error.");
+}
+
 $host = $env['DB_HOST'] ?? 'localhost';
 $user = $env['DB_USER'] ?? '';
 $password = $env['DB_PASS'] ?? '';

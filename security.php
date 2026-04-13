@@ -112,7 +112,7 @@ function check_login_attempts() {
 
 /* Call this when login fails */
 function record_failed_login() {
-    $_SESSION['login_attempts']++;
+    $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
     $_SESSION['last_attempt'] = time();
 }
 
@@ -120,4 +120,45 @@ function record_failed_login() {
 function reset_login_attempts() {
     $_SESSION['login_attempts'] = 0;
 }
-?> 
+
+function require_active_enrollment($conn, $subject_id) {
+
+    /* Ensure user is authenticated */
+    if (!isset($_SESSION['user_id'])) {
+        http_response_code(401);
+        header("Location: login.php");
+        exit;
+    }
+
+    $user_id = (int) ($_SESSION['user_id'] ?? 0);
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "SELECT 1 FROM enrollments 
+         WHERE user_id = ? 
+         AND subject_id = ? 
+         AND end_date >= NOW()"
+    );
+
+    if (!$stmt) {
+        error_log("Access check prepare failed: " . mysqli_error($conn));
+        http_response_code(500);
+        exit("System error.");
+    }
+
+    mysqli_stmt_bind_param($stmt, "ii", $user_id, $subject_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (mysqli_num_rows($result) === 0) {
+        mysqli_stmt_close($stmt);
+
+        error_log("Unauthorized access attempt | User: $user_id | Subject: $subject_id");
+
+        set_flash("error", "You do not have access to this subject.");
+        header("Location: dashboard.php");
+        exit;
+    }
+
+    mysqli_stmt_close($stmt);
+}
