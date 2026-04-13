@@ -142,8 +142,19 @@ include "includes/header.php";
                 <div class="mb-3">
 
                     <label class="form-label">Password:</label><!-- <br> --> 
+                    
+                    <div class="position-relative"> 
+                        <input type="password" name="password" id="password" class="form-control pe-5" required>
+                        
+                        <span 
+                            onclick="togglePassword('password', this)"
+                            class="position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor: pointer;">
 
-                    <input type="password" name="password" class="form-control" required><!-- <br><br> --> 
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+
+                        </span>
+                    </div>
 
                 </div>
 
@@ -170,4 +181,20 @@ include "includes/header.php";
 
     </div>
 
+<script>
+    function togglePassword(inputId, el) {
+        const input = document.getElementById(inputId);
+        const icon = el.querySelector("i");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        }
+    }
+</script>
 <?php include "includes/footer.php"; ?>
