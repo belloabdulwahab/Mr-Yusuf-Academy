@@ -273,7 +273,7 @@ mysqli_stmt_close($stmt);
                         <ul>
                             <li>TRCN Registered</li>
                             <li>M.Ed. (Mathematics Education)</li>
-                            <li>B.Sc. Physics Education (First Class)</li>
+                            <li>B.Sc. Mathematics Education (First Class)</li>
                             <li>Diploma in Computer Engineering</li>
                         </ul>
             </div>
@@ -290,7 +290,8 @@ mysqli_stmt_close($stmt);
         <section id="subjects">
             <div class="container">
             <h2 class="text-center mb-4">Subject Expertise</h2>
-
+            
+            <div class="container-fluid"> 
             <div class="row g-4">
 
                 <?php while ($subject = mysqli_fetch_assoc($subjects)): ?>
@@ -314,16 +315,18 @@ mysqli_stmt_close($stmt);
                     <?php endwhile; ?>
 
             </div>
+            </div>
         </section>
         
         <!-- SERVICES -->
         <section id="services" class="service-section">
         <div class="container">
             <h2 class="text-center mb-5">Our Services</h2>
-
+            
+            <div class="container-fluid">
             <div class="row g-4">
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="service-card">
                         <i class="bi bi-person fs-1 text-primary"></i>
                         <h5 class="mt-3">One-on-One Teaching</h5>
@@ -335,7 +338,7 @@ mysqli_stmt_close($stmt);
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="service-card">
                         <i class="bi bi-people fs-1 text-primary"></i>
                         <h5 class="mt-3">Group Classes</h5>
@@ -347,7 +350,7 @@ mysqli_stmt_close($stmt);
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="service-card">
                         <i class="bi bi-journal-text fs-1 text-primary"></i>
                         <h5 class="mt-3">Exam Prep</h5>
@@ -359,7 +362,7 @@ mysqli_stmt_close($stmt);
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="service-card">
                         <i class="bi bi-laptop fs-1 text-primary"></i>
                         <h5 class="mt-3">Online Lessons</h5>
@@ -371,6 +374,19 @@ mysqli_stmt_close($stmt);
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <i class="bi bi-teacher fs-1 text-primary"></i>
+                        <h5 class="mt-3">Team Advantage</h5>
+                        <p>Access to a curated group of expert tutors for English and Arts subjects</p>
+
+                        <a href="https://wa.me/2348132182911" target="_blank" class="btn btn-success mt-2">
+                            <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+            </div>
             </div>
         </div>
         </section>
