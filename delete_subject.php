@@ -25,6 +25,12 @@ if (!isset($_POST['id']) || !filter_var($_POST['id'], FILTER_VALIDATE_INT)) {
 
 $subject_id = (int) $_POST['id'];
 
+/* 🔒 TEMPORARY: Disable deletion */
+error_log("Delete attempt blocked | Admin ID: " . $_SESSION['user_id'] . " | Subject ID: $subject_id");
+set_flash("error", "Deleting subjects is currently disabled.");
+header("Location: dashboard.php");
+exit;
+
 try {
 
     $stmt = mysqli_prepare(
