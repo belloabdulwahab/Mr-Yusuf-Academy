@@ -2,6 +2,7 @@
 session_start();
 require_once "security.php";
 require_once "db.php";
+require_once "flash.php";
 
 require_student();
 
@@ -10,33 +11,12 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
     exit("Invalid subject.");
 }
 
-$user_id = (int) $_SESSION['user_id'];
 $subject_id = (int) $_GET['id'];
-
 
 try {
 
-    $stmt = mysqli_prepare(
-        $conn,
-        "SELECT 1 FROM student_subjects
-        WHERE user_id = ? AND subject_id = ?"
-    );
-
-    if (!$stmt) {
-        error_log("Subject access check prepare failed.");
-        exit("Something went wrong.");
-    }
-
-    mysqli_stmt_bind_param($stmt, "ii", $user_id, $subject_id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (mysqli_num_rows($result) === 0) {
-        http_response_code(403);
-        exit("Access denied.");
-    }
-
-    mysqli_stmt_close($stmt);
+   /* ACCESS CONTROL */
+require_active_enrollment($conn, $subject_id);
 
 } catch (Exception $e) {
 
@@ -170,7 +150,7 @@ include "includes/navbar.php";
 
 
             <!-- UPCOMING CLASS --> 
-             <h5 class="mb-3">Upcoming Classes</h5>
+             <h5 class="mb-3" id="classes">Upcoming Classes</h5>
 
              <?php 
              if (mysqli_num_rows($classes) > 0) {
