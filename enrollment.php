@@ -3,11 +3,35 @@ session_start();
 require_once "security.php";
 require_once "db.php";
 require_once "flash.php";
+require_once "config/paystack.php";
 
 /* Only logged-in students */
 require_student();
 
-$user_id = (int) $_SESSION['user_id'];
+$user_id = (int) ($_SESSION['user_id'] ?? 0);
+
+/* Email for paystack */
+$email_stmt = mysqli_prepare($conn, "SELECT email, phone FROM users WHERE id = ?");
+mysqli_stmt_bind_param($email_stmt, "i", $user_id);
+mysqli_stmt_execute($email_stmt);
+$email_result = mysqli_stmt_get_result($email_stmt);
+$user = mysqli_fetch_assoc($email_result);
+mysqli_stmt_close($email_stmt);
+
+if (!$user || empty($user['email'])) {
+    set_flash("error", "Unable to retrieve user email.");
+    header("Location: dashboard.php");
+    exit;
+}
+
+if (empty($user['phone'])) {
+    set_flash("error", "Phone number missing. Contact admin.");
+    header("Location: dashboard.php");
+    exit;
+}
+
+$user_email = $user['email'];
+$user_phone = $user['phone'];
 $csrf_token = generate_csrf_token();
 
 /* Handle Enrollment */
@@ -16,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf_token($_POST['csrf_token'] ?? null);
 
     $subject_id = $_POST['subject_id'] ?? '';
+    $months = $_POST['months'] ?? '';
 
     if(!filter_var($subject_id, FILTER_VALIDATE_INT)) {
         set_flash("error", "Invalid subject.");
@@ -25,13 +50,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $subject_id = (int) $subject_id;
 
-    try {
+    /* Validate months selection */
+    if (!in_array($months, ['1', '3', '6', '12'])) {
+        set_flash("error", "Invalid duration selected.");
+        header("Location: enrollment.php");
+        exit;
+    }
 
+    $months = (int) $months;
+
+    try {
+        /* Check if already enrolled */
         $check_stmt = mysqli_prepare(
             $conn, 
-            "SELECT 1 FROM student_subjects
-            WHERE user_id = ? AND subject_id = ?"
-        ); 
+            "SELECT 1 FROM enrollments
+            WHERE user_id = ? AND subject_id = ? AND end_date >= NOW()"
+        );  
 
         mysqli_stmt_bind_param($check_stmt, "ii", $user_id, $subject_id);
         mysqli_stmt_execute($check_stmt);
@@ -46,8 +80,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         mysqli_stmt_close($check_stmt);
+
+        /* Fetch subject price */
+        $subject_stmt = mysqli_prepare($conn, "SELECT price, subject_name FROM subjects WHERE id = ?");
+        mysqli_stmt_bind_param($subject_stmt, "i", $subject_id);
+        mysqli_stmt_execute($subject_stmt);
+        $result = mysqli_stmt_get_result($subject_stmt);
+        $subject = mysqli_fetch_assoc($result);
+        mysqli_stmt_close($subject_stmt);
+
+        if (!$subject) {
+            set_flash("error", "Subject not found.");
+            header("Location: enrollment.php");
+            exit;
+        }
+
+        $price_per_month = (float) $subject['price'];
+        $total_price = $price_per_month * $months;
+        $amount_kobo = $total_price * 100;
+
+        /* Generate unique payment reference */
+        $reference = "MRYUSUF_" . uniqid();
+
+        /* Initialize Paystack Payment */ 
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . PAYSTACK_SECRET_KEY,
+                "Content-Type: application/json"
+            ],
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                'email' => $user_email,
+                'amount' => $amount_kobo,
+                'reference' => $reference,
+                'currency' => 'NGN',
+                'callback_url' => 'http://localhost/teacher_site/verify_payment.php',
+
+                'customer' => [
+                    'phone' => $user_phone
+                ],
+
+                'metadata' => [
+                    'user_id' => $user_id,
+                    'subject_id' => $subject_id,
+                    'months' => $months
+                ]
+
+            ]),
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $res_data = json_decode($response, true);
+
+        if (!$res_data || !isset($res_data['status']) || !$res_data['status']) {
+            set_flash("error", "Payment initialization failed. Try again.");
+            header("Location: enrollment.php");
+            exit;
+        }
+
+        $_SESSION['payment_data'] = [
+            'subject_id' => $subject_id,
+            'months' => $months,
+            'amount' => $total_price,
+            'reference' => $reference
+        ];
+
+        /* Redirect to paystack checkout */
+        header("Location: " .$res_data['data']['authorization_url']);
+        exit;
         
-        $stmt = mysqli_prepare(
+       /* $stmt = mysqli_prepare(
             $conn,
             "INSERT INTO student_subjects (user_id, subject_id)
             VALUES (?, ?)"
@@ -66,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         set_flash("success", "Enrollment successful!");
         header("Location: dashboard.php");
-        exit;
+        exit; */
 
     } catch (mysqli_sql_exception $e) {
 
@@ -88,12 +196,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = mysqli_prepare(
     $conn,
     "SELECT s.id, s.subject_name, s.price
-    FROM subjects s
-    LEFT JOIN student_subjects ss
-        ON s.id = ss.subject_id
-        AND ss.user_id = ?
-    WHERE ss.subject_id IS NULL
-    ORDER BY s.subject_name ASC
+     FROM subjects s
+     LEFT JOIN enrollments e
+        ON s.id = e.subject_id
+        AND e.user_id = ?
+        AND e.end_date >= NOW()
+     WHERE e.subject_id IS NULL
+     ORDER BY s.subject_name ASC
     "
 );
 
@@ -161,6 +270,14 @@ include "includes/navbar.php";
                                     <input type="hidden"
                                         name="csrf_token"
                                         value="<?php echo $csrf_token; ?>">
+
+                                    <label for="months">Select Duration:</label>
+                                    <select name="months" id="months" required>
+                                        <option value="1">1 Month</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="6">6 Months</option>
+                                        <option value="12">12 Months</option>
+                                    </select>
 
                                     <button type="submit"
                                         class="btn btn-primary mt-auto">
