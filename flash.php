@@ -38,4 +38,3 @@ function display_flash() {
         unset($_SESSION['flash']);
     }
 }
-?>

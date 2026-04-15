@@ -36,4 +36,3 @@ try {
     http_response_code(500);
     exit("Something went wrong. Please try again later.");
 }
-?>
