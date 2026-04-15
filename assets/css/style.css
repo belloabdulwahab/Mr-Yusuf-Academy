@@ -3,16 +3,20 @@
 /* space for fixed navbar */
 body {
     padding-top: 70px;
-    background: #f6f8fb;
+    background: #f8f9fc;
     font-family: system-ui, -apple-system, Segoe UI, Roboto;
 }
-
 
 /* ======== NAVBAR ======== */
 
 /* Navbar Shadow stronger */
 .dashboard-navbar {
     box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+
+.dashboard-navbar.scrolled {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
 /* Notification badge */
@@ -23,9 +27,12 @@ body {
     border-radius: 50%;
     position: absolute;
     top: 2px;
-    right: -2px;
+    right: 2px;
 }
 
+.dropdown-menu {
+    animation: fadeIn 0.2s ease;
+}
 
 /* ======= SIDEBAR ======== */
 .sidebar {
@@ -270,16 +277,23 @@ body {
     box-shadow: 0 12px 25px rgba(0,0,0,0.08);
 }
 
-/* ======= EYE ICON ========= */
-i.bi {
-    font-size: 1.2rem;
-    color: #6c757d;
+/* Duration select styling */
+.duration-select {
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 0.2s ease;
 }
 
-i.bi:hover {
-    color: #0d6efd;
+/* Focus effect */
+.duration-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
 }
 
+/* Optional hover */
+.duration-select:hover {
+    border-color: #0d6efd;
+}
 /* ======= RESPONSIVE ======== */
 
 @media(max-width: 768px) {
@@ -290,4 +304,15 @@ i.bi:hover {
         gap: 10px;
     }
     
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
