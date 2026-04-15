@@ -205,10 +205,10 @@ include "includes/navbar.php";
                     <select name="status" class="form-select" required>
 
                         <!-- Default Option -->  
-                        <option value="Upcoming">Upcoming</option>
+                        <option value="Upcoming" selected>Upcoming</option>
 
                         <!-- Option for success --> 
-                        <option value="Completed">Completed</option> 
+                        <option value="Completed" disabled>Completed</option> 
 
                     </select>
 

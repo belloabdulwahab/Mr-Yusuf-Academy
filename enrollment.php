@@ -155,27 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " .$res_data['data']['authorization_url']);
         exit;
         
-       /* $stmt = mysqli_prepare(
-            $conn,
-            "INSERT INTO student_subjects (user_id, subject_id)
-            VALUES (?, ?)"
-        );
-
-        if (!$stmt) {
-            error_log("Enrollment INSERT preparation failed.");
-            set_flash("error", "Something went wrong.");
-            header("Location: enrollment.php");
-            exit;
-        }
-
-        mysqli_stmt_bind_param($stmt, "ii", $user_id, $subject_id);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-
-        set_flash("success", "Enrollment successful!");
-        header("Location: dashboard.php");
-        exit; */
-
     } catch (mysqli_sql_exception $e) {
 
         error_log("Enrollment error: " . $e->getMessage());
@@ -271,13 +250,16 @@ include "includes/navbar.php";
                                         name="csrf_token"
                                         value="<?php echo $csrf_token; ?>">
 
-                                    <label for="months">Select Duration:</label>
-                                    <select name="months" id="months" required>
+                                    <div class="mb-3">
+                                    <label for="months" class="form-label fw-semibold">Select Duration:</label>
+                                    <select name="months" id="months" class="form-select duration-select" required>
+                                        <option value="" disabled selected>Select duration</option>
                                         <option value="1">1 Month</option>
                                         <option value="3">3 Months</option>
                                         <option value="6">6 Months</option>
                                         <option value="12">12 Months</option>
                                     </select>
+                                    </div>
 
                                     <button type="submit"
                                         class="btn btn-primary mt-auto">
