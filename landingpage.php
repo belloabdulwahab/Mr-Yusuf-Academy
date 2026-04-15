@@ -29,6 +29,7 @@ mysqli_stmt_close($stmt);
         body {
             font-family: 'Poppins', sans-serif;
             background: #ffffff;
+            overflow-x: hidden;
         }
 
         section {
@@ -40,22 +41,53 @@ mysqli_stmt_close($stmt);
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            padding: 10px 0;
+        }
+
+        .navbar .container {
+            flex-wrap: nowrap;
         }
 
         .navbar-brand {
             font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* NAVBAR SCROLL EFFECT */
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        /* Smooth transition */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+
+        /* SMOOTH SCROLL */
+        html {
+            scroll-behavior: smooth;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
+            gap: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-links .nav-link {
             position: relative;
-            margin-left: 25px;
             color: #333;
             font-weight: 500;
+            font-size: 0.95rem;
+            flex-shrink: 0;
         }
 
         .nav-links .nav-link::after {
@@ -73,13 +105,35 @@ mysqli_stmt_close($stmt);
             width: 100%;
         }
 
+        /* OFFCANVAS */
+        .offcanvas {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .offcanvas-header {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .offcanvas .nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .offcanvas .nav-link:hover {
+            color: #0d6efd;
+        }
+
         /* HERO (kept but improved spacing only) */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             background: linear-gradient(135deg, #0d6efd, #4dabf7);
             text-align: center;
+            padding-top: 90px;
         }
 
         .hero h1 {
@@ -89,11 +143,17 @@ mysqli_stmt_close($stmt);
 
         .hero p {
             color: #333;
-            font-weight: bold;
+            font-weight: 500;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .hero h3{
             font-size: 2rem;
+        }
+
+        .hero .btn {
+            border-radius: 30px;
         }
 
         /* ABOUT */
@@ -103,7 +163,7 @@ mysqli_stmt_close($stmt);
 
         .about-img {
             width: 100%;
-            max-width: 350px;
+            max-width: 300px;
             border-radius: 50%;
             object-fit: cover;
             box-shadow: 0 20px 50px rgba(0,0,0,0.1);
@@ -113,10 +173,11 @@ mysqli_stmt_close($stmt);
         .subject-card {
             background: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             transition: 0.3s;
+            height: 100%;
         }
 
         .subject-card:hover {
@@ -146,10 +207,11 @@ mysqli_stmt_close($stmt);
         .service-card {
             background: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 25px;
             text-align: center;
             transition: 0.3s;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: 100%;
         }
 
         .service-card:hover {
@@ -194,13 +256,40 @@ mysqli_stmt_close($stmt);
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
 
             section {
                 padding: 60px 0;
             }
+
+            .hero {
+                padding-top: 100px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .hero h3 {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links .nav-link {
+                font-size: 0.85rem;
+            }
+
+            .about-img {
+                max-width: 200px;
+                margin-top: 20px;
+            }
+
         }
     </style>
 </head>
@@ -210,8 +299,9 @@ mysqli_stmt_close($stmt);
      <nav class="navbar fixed-top shadow-sm">
         <div class="container d-flex align-items-center justify-content-between">
             <a class="navbar-brand fw-bold text-primary">Mr Yusuf Academy</a>
-            
-                <div class="nav-links d-flex align-items-center ms-auto">
+
+                <!-- DESKTOP NAV -->
+                <div class="nav-links d-none d-md-flex">
                     <a href="#about" class="nav-link">About</a>
                     <a href="#subjects" class="nav-link">Subjects</a>
                     <a href="#services" class="nav-link">Services</a>
@@ -221,8 +311,32 @@ mysqli_stmt_close($stmt);
                         </button>
                     </a>
                 </div>
+
+                <!-- MOBILE BUTTON --> 
+                 <button class="btn d-md-none" data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
+                    <i class="bi bi-list fs-3"></i>
+                 </button>
+
         </div>
      </nav>
+
+     <!-- MOBILE MENU -->
+      <div class="offcanvas offcanvas-end" id="mobileNav">
+        <div class="offcanvas-header">
+            <h5 class="fw-bold">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body d-flex flex-column gap-3 pt-4">
+            <a href="#about" class="nav-link">About</a>
+            <a href="#subjects" class="nav-link">Subjects</a>
+            <a href="#services" class="nav-link">Services</a>
+
+            <a href="register.php" class="btn btn-success mt-3 rounded-pill">
+                Sign Up / Login
+            </a>
+        </div>
+      </div> 
 
      <!-- HERO SECTION -->
       <section class="hero">
@@ -279,7 +393,7 @@ mysqli_stmt_close($stmt);
             </div>
 
             <div class="col-md-6 text-center">
-                <img src="includes\images\Mr Yusuf pic.jpeg" class="about-img">
+                <img src="includes/images/Mr Yusuf pic.jpeg" class="about-img">
             </div>
 
         </div>
@@ -290,8 +404,7 @@ mysqli_stmt_close($stmt);
         <section id="subjects">
             <div class="container">
             <h2 class="text-center mb-4">Subject Expertise</h2>
-            
-            <div class="container-fluid"> 
+             
             <div class="row g-4">
 
                 <?php while ($subject = mysqli_fetch_assoc($subjects)): ?>
@@ -323,7 +436,6 @@ mysqli_stmt_close($stmt);
         <div class="container">
             <h2 class="text-center mb-5">Our Services</h2>
             
-            <div class="container-fluid">
             <div class="row g-4">
 
                 <div class="col-md-4">
@@ -387,7 +499,7 @@ mysqli_stmt_close($stmt);
                 </div>
 
             </div>
-            </div>
+
         </div>
         </section>
 
@@ -454,7 +566,7 @@ mysqli_stmt_close($stmt);
            <section class="cta text-center">
             <div class="container">
                 <h2>Start Preparing Today!</h2>
-                <a href="register.php" class="btn btn-primary mt-3">
+                <a href="register.php" class="btn btn-primary mt-3 rounded-pill">
                     Get Started
                     <i class="bi bi-arrow-right"></i>
                 </a>
@@ -532,6 +644,26 @@ mysqli_stmt_close($stmt);
             </footer>
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                window.addEventListener("scroll", function () {
+                    const navbar = document.querySelector(".navbar");
+                    if (window.scrollY > 50) {
+                        navbar.classList.add("scrolled");
+                    } else {
+                        navbar.classList.remove("scrolled");
+                    }
+                });
+
+                document.querySelectorAll('#mobileNav .nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        const offcanvasEl = document.getElementById('mobileNav');
+                        const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+                        if (offcanvas) {
+                            offcanvas.hide();
+                        }
+                    });
+                });
+            </script>
 
 </body>
 </html>
