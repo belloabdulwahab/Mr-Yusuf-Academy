@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 
-include "includes/header.php";
+include "includes/login_register_header.php";
 ?>
 
     <div class="auth-container">

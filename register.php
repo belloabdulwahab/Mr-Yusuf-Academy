@@ -117,9 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include "includes/header.php";
+include "includes/login_register_header.php";
 ?>
-
 <div class="auth-container">
 
     <div class="auth-card">
@@ -206,14 +205,14 @@ include "includes/header.php";
                         class="form-control pe-5"
                         required>
 
-                    <div id="passwordMatchMsg" class="small mt-1"></div>
-
                     <span onclick="togglePassword('confirm_password', this)"
                         class="position-absolute top-50 end-0 translate-middle-y me-3"
                         style="cursor: pointer;">
                         <i class="bi bi-eye"></i>
                     </span>
+
                 </div>
+                <div id="passwordMatchMsg" class="small mt-1"></div>
 
             </div>
 

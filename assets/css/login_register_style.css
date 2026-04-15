@@ -1,0 +1,43 @@
+body {
+    padding-top: 70px;
+    background: linear-gradient(180deg, #406DC7, #4dabf7);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+@media(max-width: 768px) {
+    
+    .dashboard-header{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
