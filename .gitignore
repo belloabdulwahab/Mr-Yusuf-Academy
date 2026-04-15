@@ -1,4 +1,4 @@
 .env 
 *.log
 .vscode/
-.config/paystack_key.php
+config/paystack.php
