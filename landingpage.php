@@ -126,34 +126,40 @@ mysqli_stmt_close($stmt);
             color: #0d6efd;
         }
 
-        /* HERO (kept but improved spacing only) */
+        /* HERO (FIXED RESPONSIVE) */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            background: linear-gradient(135deg, #0d6efd, #4dabf7);
+            background-image: url(includes/images/background.jpg);
             text-align: center;
-            padding-top: 90px;
+            padding: 80px 15px;
         }
 
-        .hero h1 {
-            font-size: 3rem;
+        .hero h2 {
+            font-size: clamp(1.6rem, 5vw, 3.5rem);
             font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
         }
 
         .hero p {
-            color: #333;
-            font-weight: 500;
+            font-size: clamp(0.95rem, 2.5vw, 1.25rem);
             max-width: 700px;
-            margin: 0 auto;
+            color: #333;
+            margin: 15px auto;
+            line-height: 1.6;
         }
 
-        .hero h3{
-            font-size: 2rem;
+        .hero h3 {
+            font-size: clamp(0.85rem, 2vw, 1.2rem);
+            margin-top: 30px;
         }
 
         .hero .btn {
             border-radius: 30px;
+            padding: 10px 25px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
         }
 
         /* ABOUT */
@@ -265,7 +271,7 @@ mysqli_stmt_close($stmt);
                 padding-top: 100px;
             }
 
-            .hero h1 {
+            .hero h2 {
                 font-size: 2rem;
             }
 
@@ -341,7 +347,7 @@ mysqli_stmt_close($stmt);
      <!-- HERO SECTION -->
       <section class="hero">
         <div class="container text-center">
-            <h1 class="text-white">Achieve Academic Excellence with Expert Guidance</h1>
+            <h2>Achieve Academic Excellence With Expert Guidance</h2><br>
             <p>
                 Learn from an award-winning STEM specialist with a proven track record
                 of training 600+ students for success in WAEC, NECO, JAMB, IGCSE, SAT & GRE.
@@ -353,7 +359,7 @@ mysqli_stmt_close($stmt);
             Get Started <i class="bi bi-arrow-right"></i>
             </a>
 
-            <h3 class="text-muted mt-5">Structured learning | Proven results | Real improvement</h3>
+            <h3 class="text-muted">Structured learning | Proven results | Real improvement</h3>
         </div>
       </section>
 

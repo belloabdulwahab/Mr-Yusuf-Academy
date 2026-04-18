@@ -170,6 +170,14 @@ include "includes/login_register_header.php";
 
             <div class="text-center mt-3">
 
+                <small>
+                    <a href="forgot_password.php" class="text-danger">Forgot Password?</a>
+                </small>
+
+            </div>
+
+            <div class="text-center mt-3">
+
                 <small class="text-muted">
                     Don't have an account? 
                     <a href="register.php">Register</a>
