@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'amount' => $amount_kobo,
                 'reference' => $reference,
                 'currency' => 'NGN',
-                'callback_url' => 'http://localhost/teacher_site/verify_payment.php',
+                'callback_url' => 'https://mryusufacademy.com.ng/verify_payment.php',
 
                 'customer' => [
                     'phone' => $user_phone
