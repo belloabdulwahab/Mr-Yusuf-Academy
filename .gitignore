@@ -2,5 +2,4 @@
 *.log
 .vscode/
 config/paystack.php
-hash.php
 config/smtp.php
